@@ -1,9 +1,9 @@
 {
-  "name": "OCNotifier (Dev)",
-  "version": "0.0.1",
+  "name": "Stratus Notifier (Dev)",
+  "version": "0.0.2",
   "manifest_version": 2,
-  "description": "Get alerts when your favorite maps are playing on OCN.",
-  "homepage_url": "https://ocn.rastalulz.com/",
+  "description": "Get alerts when your favorite maps are playing on Stratus Network.",
+  "homepage_url": "https://github.com/unixfox/StratusNotifier",
   "icons": {
     "16": "img/icons/icon16.png",
     "48": "img/icons/icon48.png",
@@ -21,12 +21,15 @@
   },
   "browser_action": {
     "default_icon": "img/icons/icon128.png",
-    "default_title": "OCNotifier",
+    "default_title": "StratusNotifier",
     "default_popup": "html/popup.html"
   },
   "permissions": [
     "notifications",
-    "https://ocn.rastalulz.com/*",
-    "*://*.oc.tc/*"
+    "https://stratusnotifier.unixfox.eu/*",
+    "*://*.stratus.network/*",
+    "http://localhost/*",
+    "https://stratus.nyc3.digitaloceanspaces.com/*",
+    "https://stats.seth-phillips.com/stratus-maps/*"
   ]
 }

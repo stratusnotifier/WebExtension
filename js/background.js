@@ -1,4 +1,4 @@
-var baseUrl = 'https://ocn.rastalulz.com/api/';
+var baseUrl = 'http://localhost/';
 
 var mapsJson, serversJson;
 
@@ -6,11 +6,11 @@ var firstRefresh = true;
 
 var refreshTimer = 30;
 
-$(document).ready(function() {
+$(document).ready(function () {
 
 	initDatabase(true);
 
-	if(getDatabase().isNew()) {
+	if (getDatabase().isNew()) {
 
 		initSettings();
 
@@ -18,31 +18,31 @@ $(document).ready(function() {
 
 	triggerRefresh();
 
-	setInterval(function() { triggerRefresh(); }, refreshTimer * 1000);
+	setInterval(function () { triggerRefresh(); }, refreshTimer * 1000);
 
 	/* Prevent old notifications from displaying late. */
 
-	setInterval(function() { clearOldNotifications(30); }, 1000); // Clear any notification 30 seconds.
+	setInterval(function () { clearOldNotifications(30); }, 1000); // Clear any notification 30 seconds.
 
 });
 
 function triggerRefresh() {
 
-	$.getJSON(baseUrl + 'maps', function(data) {
+	$.getJSON(baseUrl + 'maps', function (data) {
 
 		mapsJson = data;
 
-	}).promise().done(function() {
+	}).promise().done(function () {
 
-		$.getJSON(baseUrl + 'servers', function(data) {
+		$.getJSON(baseUrl + 'servers', function (data) {
 
 			serversJson = data;
-			
-	    }).promise().done(function() {
 
-	    	checkMaps();
+		}).promise().done(function () {
 
-	    })
+			checkMaps();
+
+		})
 
 	});
 
@@ -50,11 +50,11 @@ function triggerRefresh() {
 
 function checkMaps() {
 
-	getDatabase().query("playing", function(rowData) {
+	getDatabase().query("playing", function (rowData) {
 
 		var serverId = rowData.serverId;
 
-		if(firstRefresh || serversJson.servers[serverId] === undefined || serversJson.servers[serverId].map.id != rowData.mapId || !isSettingSet('region', serversJson.servers[serverId].region)) {
+		if (firstRefresh || serversJson.servers[serverId] === undefined || serversJson.servers[serverId].map.id != rowData.mapId || !isSettingSet('region', serversJson.servers[serverId].region)) {
 
 			removePlaying(serverId);
 
@@ -64,27 +64,27 @@ function checkMaps() {
 
 	var mapsPlayingTotal = 0;
 
-	$.each(serversJson.servers, function(serverId, serverData) {
+	$.each(serversJson.servers, function (serverId, serverData) {
 
-		if(isPlaying(serverId) && !isMapFavorited(serverData.map.id)) {
+		if (isPlaying(serverId) && !isMapFavorited(serverData.map.id)) {
 
 			removePlaying(serverId);
 
-		}else if(isMapFavorited(serverData.map.id)) {
+		} else if (isMapFavorited(serverData.map.id)) {
 
-			if(isSettingSet('region', serverData.region)) {
+			if (isSettingSet('region', serverData.region)) {
 
 				mapsPlayingTotal++;
 
-				if(!isPlaying(serverId)) {
+				if (!isPlaying(serverId)) {
 
 					addPlaying(serverId, serverData.map.id);
 
-					if(isSettingSet('notification', 'maps')) {
+					if (isSettingSet('notification', 'maps')) {
+						console.log(serverData.map.name);
+						createNotification(serverData.map.name, serverData.name, serverData.region, serverData.playing, serverId);
 
-					    createNotification(serverData.map.name, mapsJson.maps[serverData.map.id].thumb, serverData.name, serverData.region, serverData.playing, serverId); 	
-
-					}	
+					}
 
 				}
 
@@ -94,71 +94,70 @@ function checkMaps() {
 
 	});
 
-    chrome.browserAction.setBadgeBackgroundColor({ color: [0, 123, 205, 237] });
+	chrome.browserAction.setBadgeBackgroundColor({ color: [0, 123, 205, 237] });
 
-	chrome.browserAction.setBadgeText({text: '' + mapsPlayingTotal});
+	chrome.browserAction.setBadgeText({ text: '' + mapsPlayingTotal });
 
 	var updateMapsSet = firstRefresh;
 
-	firstRefresh = false; 
+	firstRefresh = false;
 
 	/* Check if popup is open, and refresh data if so. */
 
-	var getAppPopup = chrome.extension.getViews({type: "popup"});
+	var getAppPopup = chrome.extension.getViews({ type: "popup" });
 
-	if(getAppPopup.length > 0) {
+	if (getAppPopup.length > 0) {
 
-	    var appPopup = getAppPopup[0];
+		var appPopup = getAppPopup[0];
 
-        appPopup.pageMapsPlaying();
+		appPopup.pageMapsPlaying();
 
-	    if(updateMapsSet) {
+		if (updateMapsSet) {
 
-	    	appPopup.pageMapsSet();
+			appPopup.pageMapsSet();
 
-	    }
+		}
 
 	}
 
 }
 
-function createNotification(mapName, mapThumb, serverName, serverRegion, serverPlayers, serverId) {
+function createNotification(mapName, serverName, serverRegion, serverPlayers, serverId) {
 
 	var opt = {
-	    type: "basic",
-	    title: mapName + ' is now playing!',
-	    message: 'Server: ' + serverName + ' (' + serverRegion.toUpperCase() + ')\nPlayers: ' + serverPlayers,
-	    iconUrl: mapThumb
+		type: "basic",
+		title: mapName + ' is now playing!',
+		message: 'Server: ' + serverName + ' (' + serverRegion.toUpperCase() + ')\nPlayers(Observers): ' + serverPlayers,
+		iconUrl: "https://stats.seth-phillips.com/stratus-maps/" + mapName
 	};
 
-	var currentTime    = new Date().getTime();
+	var currentTime = new Date().getTime();
 
 	var notificationId = serverId + '.' + currentTime;
 
-	chrome.notifications.create(notificationId, opt, function() {});
+	chrome.notifications.create(notificationId, opt, function () { });
 
 }
 
 function isMapFavorited(mapId) {
-
-	return (getDatabase().query('favorites', {mapId: mapId}).length > 0);
+	return (getDatabase().query('favorites', { mapId: mapId }).length > 0);
 }
 
 function addPlaying(serverId, mapId) {
 
 	console.log('Added: ' + serverId);
 
-	if(!isPlaying(serverId)) {
+	if (!isPlaying(serverId)) {
 
 		var timeStarted = new Date().getTime();
 
-	    getDatabase().insert("playing", {
-	    	serverId: serverId, 
-	    	mapId: mapId, 
-	    	matchStarted: (!firstRefresh ? timeStarted : false)
-	    });
+		getDatabase().insert("playing", {
+			serverId: serverId,
+			mapId: mapId,
+			matchStarted: (!firstRefresh ? timeStarted : false)
+		});
 
-	    getDatabase().commit();
+		getDatabase().commit();
 
 	}
 
@@ -168,21 +167,21 @@ function removePlaying(serverId) {
 
 	console.log('Removed: ' + serverId);
 
-    getDatabase().deleteRows("playing", {serverId: serverId});
+	getDatabase().deleteRows("playing", { serverId: serverId });
 
-    getDatabase().commit();
+	getDatabase().commit();
 
 }
 
 function isPlaying(serverId) {
 
-	return (getDatabase().query('playing', {serverId: serverId}).length > 0);
+	return (getDatabase().query('playing', { serverId: serverId }).length > 0);
 
 }
 
 function initSettings() {
 
-	getDatabase().createTableWithData("settings", [{type: "notification", value: "maps"}, {type: "region", value: "eu"}, {type: "region", value: "us"}]);
+	getDatabase().createTableWithData("settings", [{ type: "notification", value: "maps" }, { type: "region", value: "eu" }, { type: "region", value: "us" }]);
 
 	getDatabase().createTable("playing", ["serverId", "mapId", "matchStarted"]);
 
@@ -194,17 +193,17 @@ function initSettings() {
 
 function clearOldNotifications(seconds) {
 
-	chrome.notifications.getAll(function(ids) {
+	chrome.notifications.getAll(function (ids) {
 
-		for(id in ids) {
+		for (id in ids) {
 
 			var getNotificationData = id.split('.');
 
 			var currentTime = new Date().getTime();
 
-			if(parseInt(currentTime, 10) > (parseInt(getNotificationData[1], 10) + (parseInt(seconds, 10) * 1000))) {
+			if (parseInt(currentTime, 10) > (parseInt(getNotificationData[1], 10) + (parseInt(seconds, 10) * 1000))) {
 
-				chrome.notifications.clear(id, function(){});
+				chrome.notifications.clear(id, function () { });
 
 			}
 

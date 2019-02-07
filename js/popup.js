@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
 	initDatabase(false);
 
@@ -12,44 +12,45 @@ $(document).ready(function() {
 
 function pageMapsPlaying() {
 
-	if(isDataReady()) {
+	if (isDataReady()) {
 
-		if($('.map-list-playing').is(':not(:empty)')) {
+		if ($('.map-list-playing').is(':not(:empty)')) {
 
 			$('.map-list-playing .list-group').html('');
 
 		}
 
-		db = new localStorageDB("ocnotifier", localStorage);
+		db = new localStorageDB("stratusnotifier", localStorage);
 
-		var playingServers = db.queryAll("playing", {sort: [["mapId", "ASC"]]});
+		var playingServers = db.queryAll("playing", { sort: [["mapId", "ASC"]] });
+		console.log(playingServers);
 
-		if(playingServers.length <= 0) {
+		if (playingServers.length <= 0) {
 
-	    	$('.map-list-playing .list-group').html('<li class="list-group-item list-group-item-info">Sorry, none of your favorite maps are playing.</li>');
+			$('.map-list-playing .list-group').html('<li class="list-group-item list-group-item-info">Sorry, none of your favorite maps are playing.</li>');
 
-		}else{
+		} else {
 
 			var lastMapId;
 
-			playingServers.forEach(function(playingServer) {
+			playingServers.forEach(function (playingServer) {
 
-				if(lastMapId != playingServer.mapId) {
+				if (lastMapId != playingServer.mapId) {
 
-			        $('.map-list-playing .list-group').append('<li class="list-group-item list-group-item-info">' + getJson('maps').maps[playingServer.mapId].name + '</li>');
+					$('.map-list-playing .list-group').append('<li class="list-group-item list-group-item-info">' + getJson('maps').maps[playingServer.mapId].name + '</li>');
 
-			    }
+				}
 
-	    		var serverInfo = getJson('servers').servers[playingServer.serverId];
+				var serverInfo = getJson('servers').servers[playingServer.serverId];
 
-	    		$('.map-list-playing .list-group').append('<li class="list-group-item">' +
-	    			                                          '<span class="badge alert-success">' + serverInfo.playing + '</span>' +
-	    		                                              '<span class="label label-primary">' + serverInfo.region.toUpperCase() + '</span> ' + serverInfo.name + 
-	    		                                          '</li>');
+				$('.map-list-playing .list-group').append('<li class="list-group-item">' +
+					'<span class="badge alert-success">' + serverInfo.playing + '</span>' +
+					'<span class="label label-primary">' + serverInfo.region.toUpperCase() + '</span> ' + serverInfo.name +
+					'</li>');
 
-	    		lastMapId = playingServer.mapId;
+				lastMapId = playingServer.mapId;
 
-		    });
+			});
 
 		}
 
@@ -63,23 +64,23 @@ function pageMapsPlaying() {
 
 function pageMapsSet() {
 
-	if(isDataReady()) {
+	if (isDataReady()) {
 
 		/* Allows for case insensitive searches. */
 
-		$.expr[":"].contains = $.expr.createPseudo(function(arg) {
-		    return function( elem ) {
-		        return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
-		    };
+		$.expr[":"].contains = $.expr.createPseudo(function (arg) {
+			return function (elem) {
+				return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+			};
 		});
 
 		/* Load in list of maps. */
 
-		$.each(getJson('maps').maps, function(mapId, mapData) {
+		$.each(getJson('maps').maps, function (mapId, mapData) {
 
 			$('#page-maps-set .table').append('<tr><td><div class="checkbox"><label><input id="' + mapId + '" type="checkbox" class="map-check"> ' + mapData.name + '</label></div></td></tr>');
 
-			if(getDatabase().query('favorites', {mapId: mapId}).length > 0) {
+			if (getDatabase().query('favorites', { mapId: mapId }).length > 0) {
 
 				$('#page-maps-set #' + mapId).attr('checked', 'checked');
 
@@ -99,19 +100,19 @@ function pageMapsSet() {
 
 		/* Show only checked maps. */
 
-		$('#toggle-maps').on('click', function(event) {
+		$('#toggle-maps').on('click', function (event) {
 
-			if(!$('#' + event.target.id).hasClass('active')) {
+			if (!$('#' + event.target.id).hasClass('active')) {
 
 				$('#page-maps-set .map-search').val('');
 
-				$('#page-maps-set td').removeClass('display-none');			
+				$('#page-maps-set td').removeClass('display-none');
 
 				$('#page-maps-set #maps-all').toggleClass('active');
 
 				$('#page-maps-set #maps-checked').toggleClass('active');
 
-				if(event.target.id == 'maps-checked') {
+				if (event.target.id == 'maps-checked') {
 
 					$("#page-maps-set input:checkbox:not(:checked)").closest('td').toggleClass('display-none');
 
@@ -125,27 +126,27 @@ function pageMapsSet() {
 
 		});
 
-	    /* Check if a check box is checked or unchecked. */
+		/* Check if a check box is checked or unchecked. */
 
-	    $('#page-maps-set .map-check').on('change', function() {
+		$('#page-maps-set .map-check').on('change', function () {
 
-	    	var mapObj = $(this);
+			var mapObj = $(this);
 
-	    	var mapId = mapObj.attr('id');
+			var mapId = mapObj.attr('id');
 
-			if(this.checked) {
+			if (this.checked) {
 
-				getDatabase().insert("favorites", {mapId: mapId});
+				getDatabase().insert("favorites", { mapId: mapId });
 
-			}else{
+			} else {
 
-				getDatabase().deleteRows("favorites", {mapId: mapId});
+				getDatabase().deleteRows("favorites", { mapId: mapId });
 
 			}
 
 			getDatabase().commit();
 
-			if($('#page-maps-set #maps-checked').hasClass('active')) {
+			if ($('#page-maps-set #maps-checked').hasClass('active')) {
 
 				mapObj.closest('td').toggleClass('display-none');
 
@@ -157,17 +158,17 @@ function pageMapsSet() {
 
 		/* Perform map searches. */
 
-		$('#page-maps-set .map-search').on('change', function() {
+		$('#page-maps-set .map-search').on('change', function () {
 
 			var searchQuery = $(this).val();
 
 			$('#page-maps-set td').addClass('display-none');
 
-		    $('#page-maps-set td:contains(' + searchQuery + ')').removeClass('display-none');
+			$('#page-maps-set td:contains(' + searchQuery + ')').removeClass('display-none');
 
-			if($('#page-maps-set #maps-checked').hasClass('active')) {
+			if ($('#page-maps-set #maps-checked').hasClass('active')) {
 
-			    $("#page-maps-set input:checkbox:not(:checked)").closest('td').addClass('display-none');
+				$("#page-maps-set input:checkbox:not(:checked)").closest('td').addClass('display-none');
 
 			}
 
@@ -177,7 +178,7 @@ function pageMapsSet() {
 
 			$(this).change();
 
-	    });
+		});
 
 	}
 
@@ -187,9 +188,9 @@ function pageOptions() {
 
 	/* Region settings. */
 
-	getDatabase().query("settings", function(row) {
+	getDatabase().query("settings", function (row) {
 
-		if(row.type == 'region') {
+		if (row.type == 'region') {
 
 			$('.option-region[value="' + row.value + '"]').attr('checked', true);
 
@@ -197,7 +198,7 @@ function pageOptions() {
 
 	});
 
-	$('.option-region').on('click', function() {
+	$('.option-region').on('click', function () {
 
 		var serverRegion = $(this).attr('value');
 
@@ -209,9 +210,9 @@ function pageOptions() {
 
 	/* Notification settings. */
 
-	getDatabase().query("settings", function(row) {
+	getDatabase().query("settings", function (row) {
 
-		if(row.type == 'notification') {
+		if (row.type == 'notification') {
 
 			$('.option-notification[value="' + row.value + '"]').attr('checked', true);
 
@@ -219,7 +220,7 @@ function pageOptions() {
 
 	});
 
-	$('.option-notification').on('click', function() {
+	$('.option-notification').on('click', function () {
 
 		var notificationSetting = $(this).attr('value');
 
@@ -247,9 +248,9 @@ function refreshPlayingMaps() {
 
 function getJson(savedJson) {
 
-	switch(savedJson) {
+	switch (savedJson) {
 
-		case 'maps':    return chrome.extension.getBackgroundPage().mapsJson;    break;
+		case 'maps': return chrome.extension.getBackgroundPage().mapsJson; break;
 
 		case 'servers': return chrome.extension.getBackgroundPage().serversJson; break;
 
