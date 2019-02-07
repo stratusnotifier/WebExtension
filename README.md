@@ -1,15 +1,18 @@
 # StratusNotifier
 Get alerts when your favorite maps are playing on the Minecraft server Stratus Network.
 
-# Install on Chrome (and Opera)
-You can get the latest stable build of OCNotifier in the [Chrome Web Store][1].
+# Install it on your favorite browser
+* Firefox: https://addons.mozilla.org/en-US/firefox/addon/stratus-notifier/
+* Chrome: Coming soon
+* Opera: Coming soon
 
 # Preview
-![OCNotifier][3]
-
-http://imgur.com/a/C8yqA
+![](https://i.imgur.com/lPHGCKK.png)
+![](https://i.imgur.com/utL8ZOk.jpg)
 
 # Changelog
+### 0.0.3
+* Update Bootstrap version
 ### 0.0.2
 * Rework for the Minecraft server Stratus Network by unixfox.
 ### 0.0.1 

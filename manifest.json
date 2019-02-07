@@ -1,6 +1,6 @@
 {
   "name": "Stratus Notifier",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "manifest_version": 2,
   "description": "Get alerts when your favorite maps are playing on the Minecraft Stratus Network server.",
   "homepage_url": "https://github.com/stratusnotifier/WebExtension",
