@@ -1,3 +1,14 @@
+var _paq = _paq || [];
+
+_paq.push(['trackPageView']);
+_paq.push(['enableLinkTracking']);
+_paq.push(['enableHeartBeatTimer']);
+(function () {
+	var u = "https://stats.unixfox.eu/analyses/";
+	_paq.push(['setTrackerUrl', u + 'php']);
+	_paq.push(['setSiteId', '10']);
+})();
+
 $(document).ready(function () {
 
 	initDatabase(false);

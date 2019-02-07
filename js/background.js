@@ -6,6 +6,17 @@ var firstRefresh = true;
 
 var refreshTimer = 10;
 
+var _paq = _paq || [];
+
+_paq.push(['trackPageView']);
+_paq.push(['enableLinkTracking']);
+_paq.push(['enableHeartBeatTimer']);
+(function () {
+	var u = "https://stats.unixfox.eu/analyses/";
+	_paq.push(['setTrackerUrl', u + 'php']);
+	_paq.push(['setSiteId', '10']);
+})();
+
 $(document).ready(function () {
 
 	initDatabase(true);
@@ -81,7 +92,7 @@ function checkMaps() {
 					addPlaying(serverId, serverData.map.id);
 
 					if (isSettingSet('notification', 'maps')) {
-						
+
 						createNotification(serverData.map.name, serverData.name, serverData.region, serverData.playing, serverId);
 
 					}

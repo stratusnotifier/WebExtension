@@ -1,9 +1,9 @@
 {
-  "name": "Stratus Notifier (Dev)",
+  "name": "Stratus Notifier",
   "version": "0.0.2",
   "manifest_version": 2,
-  "description": "Get alerts when your favorite maps are playing on Stratus Network.",
-  "homepage_url": "https://github.com/unixfox/StratusNotifier",
+  "description": "Get alerts when your favorite maps are playing on the Minecraft Stratus Network server.",
+  "homepage_url": "https://github.com/stratusnotifier/WebExtension",
   "icons": {
     "16": "img/icons/icon16.png",
     "48": "img/icons/icon48.png",
@@ -15,7 +15,8 @@
       "js/jquery.min.js",
       "js/localstoragedb.min.js",
       "js/global.js",
-      "js/background.js"
+      "js/background.js",
+      "js/analyses.js"
     ],
     "persistent": true
   },
@@ -28,6 +29,7 @@
     "notifications",
     "https://stratusnotifier.unixfox.eu/*",
     "*://*.stratus.network/*",
-    "https://stats.seth-phillips.com/stratus-maps/*"
+    "https://stats.seth-phillips.com/stratus-maps/*",
+    "https://stats.unixfox.eu/*"
   ]
 }
