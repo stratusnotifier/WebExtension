@@ -28,8 +28,6 @@
     "notifications",
     "https://stratusnotifier.unixfox.eu/*",
     "*://*.stratus.network/*",
-    "http://localhost/*",
-    "https://stratus.nyc3.digitaloceanspaces.com/*",
     "https://stats.seth-phillips.com/stratus-maps/*"
   ]
 }

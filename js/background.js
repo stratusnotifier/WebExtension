@@ -1,10 +1,10 @@
-var baseUrl = 'http://localhost/';
+var baseUrl = 'https://stratusnotifier.unixfox.eu/';
 
 var mapsJson, serversJson;
 
 var firstRefresh = true;
 
-var refreshTimer = 30;
+var refreshTimer = 10;
 
 $(document).ready(function () {
 
@@ -81,7 +81,7 @@ function checkMaps() {
 					addPlaying(serverId, serverData.map.id);
 
 					if (isSettingSet('notification', 'maps')) {
-						console.log(serverData.map.name);
+						
 						createNotification(serverData.map.name, serverData.name, serverData.region, serverData.playing, serverId);
 
 					}
@@ -127,7 +127,7 @@ function createNotification(mapName, serverName, serverRegion, serverPlayers, se
 	var opt = {
 		type: "basic",
 		title: mapName + ' is now playing!',
-		message: 'Server: ' + serverName + ' (' + serverRegion.toUpperCase() + ')\nPlayers(Observers): ' + serverPlayers,
+		message: 'Server: ' + serverName + ' (' + serverRegion.toUpperCase() + ')\nPlayers: ' + serverPlayers,
 		iconUrl: "https://stats.seth-phillips.com/stratus-maps/" + mapName
 	};
 
