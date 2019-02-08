@@ -3,8 +3,8 @@ Get alerts when your favorite maps are playing on the Minecraft server Stratus N
 
 # Install it on your favorite browser
 * Firefox: https://addons.mozilla.org/en-US/firefox/addon/stratus-notifier/
-* Chrome: Coming soon
-* Opera: Coming soon
+* Chrome: https://chrome.google.com/webstore/detail/abdkhbngkfieaniccgofpbbpfjdjcide
+* Opera: https://addons.opera.com/fr/extensions/details/mmfopnaabangnaciegpolehiilpgejbb/
 
 # Preview
 ![](https://i.imgur.com/lPHGCKK.png)
